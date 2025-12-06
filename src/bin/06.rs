@@ -40,7 +40,7 @@ pub fn part_two(input: &str) -> Option<u64> {
             current_operator = char;
             // continue;
         }
-        else if !vec!['+','*'].contains(&char) {
+        else if !vec!['+','*'].contains(&char) && k != input.lines().last()?.chars().count()-1 {
             count+=1;
         }
         else if vec!['+','*'].contains(&char) || k == input.lines().last()?.chars().count()-1 {
