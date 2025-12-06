@@ -79,12 +79,12 @@ pub fn part_two(input: &str) -> Option<u64> {
             if current_operator == '+' {
                 let subtotal = operands.iter().sum::<u64>();
                 total += subtotal;
-                println!("Subtotal for +: {}", subtotal);
+                // println!("Subtotal for +: {}", subtotal);
             }
             else if current_operator == '*' {
                 let subtotal = operands.iter().product::<u64>();
                 total += subtotal;
-                println!("Subtotal for *: {}", subtotal);
+                // println!("Subtotal for *: {}", subtotal);
             }
             // reset count
             count = 0;
@@ -115,12 +115,12 @@ mod tests {
     #[test]
     fn test_part_one() {
         let result = part_one(&advent_of_code::template::read_file("examples", DAY));
-        assert_eq!(result, None);
+        assert_eq!(result, Some(4449991244405));
     }
 
     #[test]
     fn test_part_two() {
         let result = part_two(&advent_of_code::template::read_file("examples", DAY));
-        assert_eq!(result, None);
+        assert_eq!(result, Some(9348430857627));
     }
 }
