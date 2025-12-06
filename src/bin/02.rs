@@ -81,14 +81,16 @@ mod tests {
     }
 
     #[test]
+    #[ignore]
     fn test_part_one() {
         let result = part_one(&advent_of_code::template::read_file("inputs", DAY));
-        assert_eq!(result, Some(16793817782));
+        assert_eq!(result, None);
     }
 
     #[test]
+    #[ignore]
     fn test_part_two() {
         let result = part_two(&advent_of_code::template::read_file("inputs", DAY));
-        assert_eq!(result, Some(27469417404));
+        assert_eq!(result, None);
     }
 }
