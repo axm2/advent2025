@@ -95,25 +95,25 @@ mod tests {
 
     #[test]
     fn test_example_part_one() {
-        let result = part_one(&advent_of_code::template::read_file_part("examples", DAY,0));
+        let result = part_one(&advent_of_code::template::read_file("examples", DAY));
         assert_eq!(result, Some(3));
     }
 
     #[test]
     fn test_example_part_two() {
-        let result = part_two(&advent_of_code::template::read_file_part("examples", DAY,0));
+        let result = part_two(&advent_of_code::template::read_file("examples", DAY));
         assert_eq!(result, Some(14));
     }
 
     #[test]
     fn test_part_one() {
-        let result = part_one(&advent_of_code::template::read_file("examples", DAY));
+        let result = part_one(&advent_of_code::template::read_file("inputs", DAY));
         assert_eq!(result, Some(789));
     }
 
     #[test]
     fn test_part_two() {
-        let result = part_two(&advent_of_code::template::read_file("examples", DAY));
+        let result = part_two(&advent_of_code::template::read_file("inputs", DAY));
         assert_eq!(result, Some(343329651880509));
     }
 }
