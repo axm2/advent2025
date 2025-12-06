@@ -38,9 +38,9 @@ pub fn part_two(input: &str) -> Option<u64> {
         let char = input.lines().last()?.chars().nth(k).unwrap();
         if k==0 {
             current_operator = char;
-            // continue;
+            continue;
         }
-        else if !vec!['+','*'].contains(&char) && k != input.lines().last()?.chars().count()-1 {
+        if !vec!['+','*'].contains(&char) && k != input.lines().last()?.chars().count()-1 {
             count+=1;
         }
         else if vec!['+','*'].contains(&char) || k == input.lines().last()?.chars().count()-1 {
@@ -48,7 +48,17 @@ pub fn part_two(input: &str) -> Option<u64> {
             let mut operands: Vec<u64> = Vec::new();
             let mut digits: Vec<char> = Vec::new();
             // for j in (k..count+k).rev(){
-            for j in k-1-count..k-1{
+            let low:usize;
+            let high:usize;
+            if k == input.lines().last()?.chars().count()-1 {
+                low=k-count-1;
+                high=k+1;
+            }
+            else{
+                low=k-1-count;
+                high=k-1;
+            }
+            for j in low..high{
                 for i in 0..input.lines().count(){
                     let digit = map.get(&(i as usize, j as usize));
                     if digit.is_none(){
