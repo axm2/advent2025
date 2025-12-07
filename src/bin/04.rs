@@ -4,11 +4,22 @@ pub fn is_accessible(matrix: &Vec<Vec<char>>, i: usize, j: usize) -> bool {
     // accessible if fewer than 4 neighbors are '@'
     let mut roll_count = 0;
     // 8 directions as isize deltas
-    let directions: [(isize, isize); 8] = [(-1, -1), (-1, 0), (-1, 1),
-                                           (0, -1),           (0, 1),
-                                           (1, -1),  (1, 0),  (1, 1)];
+    let directions: [(isize, isize); 8] = [
+        (-1, -1),
+        (-1, 0),
+        (-1, 1),
+        (0, -1),
+        (0, 1),
+        (1, -1),
+        (1, 0),
+        (1, 1),
+    ];
     let rows = matrix.len() as isize;
-    let cols = if rows > 0 { matrix[0].len() as isize } else { 0 };
+    let cols = if rows > 0 {
+        matrix[0].len() as isize
+    } else {
+        0
+    };
     let i_isize = i as isize;
     let j_isize = j as isize;
 
@@ -31,7 +42,7 @@ pub fn part_one(input: &str) -> Option<u64> {
     let matrix: Vec<Vec<char>> = input.lines().map(|line| line.chars().collect()).collect();
     for i in 0..matrix.len() {
         for j in 0..matrix[i].len() {
-            if matrix[i][j]=='@' && is_accessible(&matrix, i, j) {
+            if matrix[i][j] == '@' && is_accessible(&matrix, i, j) {
                 accessible += 1;
             }
         }
@@ -40,25 +51,24 @@ pub fn part_one(input: &str) -> Option<u64> {
 }
 
 pub fn part_two(input: &str) -> Option<u64> {
-    let mut matrix : Vec<Vec<char>> = input.lines().map(|line| line.chars().collect()).collect();
+    let mut matrix: Vec<Vec<char>> = input.lines().map(|line| line.chars().collect()).collect();
     let mut removed_count = 0usize;
-    let mut flag:bool = false;
-    while !flag{
-        let mut removed: Vec<(i32,i32)> = Vec::new();
+    let mut flag: bool = false;
+    while !flag {
+        let mut removed: Vec<(i32, i32)> = Vec::new();
         for i in 0..matrix.len() {
             for j in 0..matrix[i].len() {
-                if matrix[i][j]=='@' && is_accessible(&matrix, i, j) {
-                    removed.push((i as i32,j as i32));
-                    removed_count+=1;
+                if matrix[i][j] == '@' && is_accessible(&matrix, i, j) {
+                    removed.push((i as i32, j as i32));
+                    removed_count += 1;
                 }
             }
         }
-        if removed.len()==0{
-            flag=true;
-        }
-        else {
-            for (i,j) in removed{
-                matrix[i as usize][j as usize]='.';
+        if removed.len() == 0 {
+            flag = true;
+        } else {
+            for (i, j) in removed {
+                matrix[i as usize][j as usize] = '.';
             }
         }
     }
@@ -68,7 +78,6 @@ pub fn part_two(input: &str) -> Option<u64> {
 #[cfg(test)]
 mod tests {
     use super::*;
-
 
     #[test]
     fn test_example_part_one() {

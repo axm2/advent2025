@@ -1,26 +1,26 @@
 advent_of_code::solution!(2);
 
-pub fn is_valid_id(n:i64) -> bool {
+pub fn is_valid_id(n: i64) -> bool {
     // turn to string
     let s = n.to_string();
-    if s.len() % 2 == 0{
-        let mid = s.len()/2;
+    if s.len() % 2 == 0 {
+        let mid = s.len() / 2;
         let first_half = &s[..mid];
         let second_half = &s[mid..];
-        if first_half == second_half{
+        if first_half == second_half {
             return false;
         }
     }
     return true;
 }
 
-pub fn is_valid_id_2(n:i64) -> bool {
+pub fn is_valid_id_2(n: i64) -> bool {
     // Id is invalid if it is made only of some sequence of digits repeated at least twice.
     // turn to string
     let s = n.to_string();
     let len = s.len();
     // try every possible pattern length up to half the string length
-    for l in 1..=len/2 {
+    for l in 1..=len / 2 {
         if len % l != 0 {
             continue;
         }

@@ -5,10 +5,17 @@ pub fn part_one(input: &str) -> Option<i64> {
     let mut sum = 0i64;
     for ingredient_id in ingredient_ids.lines() {
         for range in ranges.lines() {
-            if ingredient_id.parse::<i64>().unwrap() >= range.split('-').collect::<Vec<&str>>()[0].parse::<i64>().unwrap() &&
-               ingredient_id.parse::<i64>().unwrap() <= range.split('-').collect::<Vec<&str>>()[1].parse::<i64>().unwrap() {
+            if ingredient_id.parse::<i64>().unwrap()
+                >= range.split('-').collect::<Vec<&str>>()[0]
+                    .parse::<i64>()
+                    .unwrap()
+                && ingredient_id.parse::<i64>().unwrap()
+                    <= range.split('-').collect::<Vec<&str>>()[1]
+                        .parse::<i64>()
+                        .unwrap()
+            {
                 // fresh
-                sum+=1;
+                sum += 1;
                 break;
             } else {
                 //spoiled
@@ -56,17 +63,25 @@ pub fn part_two(input: &str) -> Option<u64> {
             }
 
             // overlap at the low end of existing: trim end of current
-            if current_start < existing.0 && current_end >= existing.0 && current_end <= existing.1 {
+            if current_start < existing.0 && current_end >= existing.0 && current_end <= existing.1
+            {
                 current_end = existing.0 - 1;
-                if current_start > current_end { break; }
+                if current_start > current_end {
+                    break;
+                }
                 i += 1;
                 continue;
             }
 
             // overlap at the high end of existing: trim start of current
-            if current_start >= existing.0 && current_start <= existing.1 && current_end > existing.1 {
+            if current_start >= existing.0
+                && current_start <= existing.1
+                && current_end > existing.1
+            {
                 current_start = existing.1 + 1;
-                if current_start > current_end { break; }
+                if current_start > current_end {
+                    break;
+                }
                 i += 1;
                 continue;
             }

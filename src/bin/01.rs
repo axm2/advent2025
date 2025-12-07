@@ -11,7 +11,7 @@ pub fn part_one(input: &str) -> Option<i32> {
             dial -= _line[1..].parse::<i32>().unwrap();
         }
         if dial % 100 == 0 {
-            count+=1;
+            count += 1;
         }
     }
     return Some(count);
@@ -24,9 +24,9 @@ pub fn part_two(input: &str) -> Option<i32> {
         if _line.starts_with('R') {
             dial += _line[1..].parse::<i32>().unwrap();
             if dial == 0 {
-                count+=1;
+                count += 1;
             }
-            count+= dial.div_floor(100);
+            count += dial.div_floor(100);
             dial = dial.rem_euclid(100);
         }
         // we were at 0 and turned left small - no
