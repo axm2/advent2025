@@ -91,7 +91,7 @@ pub fn part_one(input: &str) -> Option<u64> {
         hs.insert(*p);
         hs
     }));
-    for _ in 0..1000{
+    for _i in 0..20{ // change to 2000 for real input
         if let Some(pp) = heap.pop() {
             let mut cluster_a_index: Option<usize> = None;
             let mut cluster_b_index: Option<usize> = None;
@@ -105,10 +105,15 @@ pub fn part_one(input: &str) -> Option<u64> {
             }
             match (cluster_a_index, cluster_b_index) {
                 (Some(a), Some(b)) if a != b => {
-                    // merge clusters
-                    let cluster_b = circuits.remove(b);
-                    for point in cluster_b {
-                        circuits[a].insert(point);
+                    // // merge clusters
+                    // let cluster_b = circuits.remove(b);
+                    // for point in cluster_b {
+                    //     circuits[a].insert(point);
+                    // }
+                    let (min, max) = if a < b { (a, b) } else { (b, a) };
+                    let cluster_max = circuits.remove(max); // safe: min index unaffected
+                    for point in cluster_max {
+                        circuits[min].insert(point);
                     }
                 }
                 (Some(a), None) => {
@@ -127,19 +132,106 @@ pub fn part_one(input: &str) -> Option<u64> {
             }
         }
     }
-    println!(
+/*     println!(
         "Circuits: {}",
         circuits
             .iter()
             .map(|c| c.len().to_string())
             .collect::<Vec<String>>()
             .join(", ")
-    );
-    None
+    ); */
+    // Get the three largest circuits.
+    let mut circuit_sizes: Vec<usize> = circuits.iter().map(|c| c.len()).collect();
+    circuit_sizes.sort_unstable_by(|a, b| b.cmp(a));
+    let mut prod = 1u64;
+    for size in circuit_sizes.iter().take(3) {
+        prod *= *size as u64;
+    }
+    Some(prod)
 }
 
 pub fn part_two(input: &str) -> Option<u64> {
-    None
+    // O(n^2)
+    let mut heap = std::collections::BinaryHeap::new();
+    let points: Vec<Point> = input.lines().filter_map(|line| {
+        let mut parts = line.split(',');
+        Some(Point {
+            x: parts.next()?.parse::<u64>().ok()?,
+            y: parts.next()?.parse::<u64>().ok()?,
+            z: parts.next()?.parse::<u64>().ok()?,
+        })
+    }).collect();
+    for current_point in &points {
+        for new_point in &points {
+            if *new_point != *current_point {
+                heap.push(PointPair {
+                    point_a: *current_point,
+                    point_b: *new_point,
+                    distance: current_point.distance(new_point),
+                });
+            }
+        }
+    }
+    // Initialize a vector of hashsets. Each hashset will represent a cluster of points.
+    // Pop one off the heap, if neither point is in a cluster, create a new cluster with those two points.
+    // If one point is in a cluster, we add the other point to that cluster.
+    let mut circuits: Vec<HashSet<Point>> = Vec::from_iter(points.iter().map(|p| {
+        let mut hs = HashSet::new();
+        hs.insert(*p);
+        hs
+    }));
+    while circuits.len() > 1 {
+        if let Some(pp) = heap.pop() {
+            let mut cluster_a_index: Option<usize> = None;
+            let mut cluster_b_index: Option<usize> = None;
+            for (i, cluster) in circuits.iter().enumerate() {
+                if cluster.contains(&pp.point_a) {
+                    cluster_a_index = Some(i);
+                }
+                if cluster.contains(&pp.point_b) {
+                    cluster_b_index = Some(i);
+                }
+            }
+            match (cluster_a_index, cluster_b_index) {
+                (Some(a), Some(b)) if a != b => {
+                    // // merge clusters
+                    // let cluster_b = circuits.remove(b);
+                    // for point in cluster_b {
+                    //     circuits[a].insert(point);
+                    // }
+                    let (min, max) = if a < b { (a, b) } else { (b, a) };
+                    let cluster_max = circuits.remove(max); // safe: min index unaffected
+                    for point in cluster_max {
+                        circuits[min].insert(point);
+                    }
+                }
+                (Some(a), None) => {
+                    circuits[a].insert(pp.point_b);
+                }
+                (None, Some(b)) => {
+                    circuits[b].insert(pp.point_a);
+                }
+                (None, None) => {
+                    let mut new_cluster = HashSet::new();
+                    new_cluster.insert(pp.point_a);
+                    new_cluster.insert(pp.point_b);
+                    circuits.push(new_cluster);
+                }
+                _ => {}
+            }
+        }
+    }
+/*     println!(
+        "Circuits: {}",
+        circuits
+            .iter()
+            .map(|c| c.len().to_string())
+            .collect::<Vec<String>>()
+            .join(", ")
+    ); */
+    // Get the three largest circuits.
+    let last = heap.pop()?;
+    return Some(last.point_a.x*last.point_b.x);
 }
 
 #[cfg(test)]
@@ -155,7 +247,7 @@ mod tests {
     #[test]
     fn test_example_part_two() {
         let result = part_two(&advent_of_code::template::read_file("examples", DAY));
-        assert_eq!(result, None);
+        assert_eq!(result, Some(25272));
     }
 
     #[test]
