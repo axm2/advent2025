@@ -73,25 +73,15 @@ pub fn part_one(input: &str) -> Option<u64> {
         })
     }).collect();
     for current_point in &points {
-        let mut closest_point: PointPair = PointPair {
-            point_a: *current_point,
-            point_b: Point { x: 0, y: 0, z: 0 },
-            distance: f64::MAX,
-        };
         for new_point in &points {
             if *new_point != *current_point {
-                let dist = current_point.distance(new_point);
-                if dist < closest_point.distance as f64 {
-                    // update closest point
-                    closest_point = PointPair {
-                        point_a: *current_point,
-                        point_b: *new_point,
-                        distance: dist,
-                    };
-                }
+                heap.push(PointPair {
+                    point_a: *current_point,
+                    point_b: *new_point,
+                    distance: current_point.distance(new_point),
+                });
             }
         }
-        heap.push(closest_point);
     }
     // Initialize a vector of hashsets. Each hashset will represent a cluster of points.
     // Pop one off the heap, if neither point is in a cluster, create a new cluster with those two points.
