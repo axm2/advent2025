@@ -77,9 +77,7 @@ pub fn dfs(
 
 pub fn part_two(input: &str) -> Option<u64> {
     // depth first traversal with memoization
-    let grid: Vec<Vec<char>> = input.lines()
-        .map(|line| line.chars().collect())
-        .collect();
+    let grid: Vec<Vec<char>> = input.lines().map(|line| line.chars().collect()).collect();
     let mut memo: HashMap<(usize, usize), u64> = HashMap::new();
     let mut timelines = 0u64;
     for (i, row) in grid.iter().enumerate() {
@@ -91,7 +89,6 @@ pub fn part_two(input: &str) -> Option<u64> {
     }
     Some(timelines)
 }
-
 
 #[cfg(test)]
 mod tests {
