@@ -1,5 +1,32 @@
+use geo::{Area, Contains, Intersects, Polygon, line_string, polygon};
+use geo_types::coord;
 use std::collections::HashSet;
 advent_of_code::solution!(9);
+
+pub fn rectangle_from_corners(a: (f64, f64), b: (f64, f64)) -> Polygon<f64> {
+    let (ax, ay) = a;
+    let (bx, by) = b;
+    let min_x = ax.min(bx);
+    let max_x = ax.max(bx);
+    let min_y = ay.min(by);
+    let max_y = ay.max(by);
+
+    let exterior = line_string![
+        coord! { x: min_x, y: min_y },
+        coord! { x: max_x, y: min_y },
+        coord! { x: max_x, y: max_y },
+        coord! { x: min_x, y: max_y },
+        coord! { x: min_x, y: min_y }, // close ring
+    ];
+
+    Polygon::new(exterior, Vec::new())
+}
+
+pub fn inclusive_area(a: (usize, usize), b: (usize, usize)) -> u64 {
+    let width = a.0.abs_diff(b.0) + 1;
+    let height = a.1.abs_diff(b.1) + 1;
+    (width * height) as u64
+}
 
 pub fn part_one(input: &str) -> Option<u64> {
     let mut max_area = 0;
@@ -37,19 +64,19 @@ pub fn part_two(input: &str) -> Option<u64> {
             (x, y)
         })
         .collect();
-    let mut perimeter: HashSet<(usize, usize)> = HashSet::from_iter(coords);
-    for i in 0..input.len() {
-        let prev;
-        let next;
+    let mut perimeter: HashSet<(usize, usize)> = HashSet::from_iter(coords.clone());
+    for i in 0..coords.len() {
+        let prev: &(usize, usize);
+        let next: &(usize, usize);
         if i == 0 {
             prev = coords.last().unwrap();
         } else {
-            prev = coords.iter().nth(i - 1)?;
+            prev = coords.get(i - 1).unwrap();
         }
         if i == coords.len() - 1 {
             next = coords.first().unwrap();
         } else {
-            next = coords.iter().nth(i+1));
+            next = coords.get(i + 1).unwrap();
         }
         // Insert line between coords[i] and prev and line between coords[i] and next
         let (x, y) = coords[i];
@@ -82,7 +109,28 @@ pub fn part_two(input: &str) -> Option<u64> {
             }
         }
     }
-    None
+    let mut exterior_coords: Vec<geo_types::Coord<f64>> = coords
+        .iter()
+        .map(|(x, y)| coord! { x: *x as f64, y: *y as f64 })
+        .collect();
+    if exterior_coords.first() != exterior_coords.last() {
+        exterior_coords.push(exterior_coords[0]);
+    }
+    let exterior = geo_types::LineString::from(exterior_coords);
+    let border = Polygon::new(exterior, Vec::new());
+    let mut max_area = 0;
+    for coord in coords.iter() {
+        for other in coords.iter() {
+            let rect = rectangle_from_corners(
+                (coord.0 as f64, coord.1 as f64),
+                (other.0 as f64, other.1 as f64),
+            );
+            if border.contains(&rect) && inclusive_area(*coord, *other) > max_area {
+                max_area = inclusive_area(*coord, *other);
+            }
+        }
+    }
+    return Some(max_area);
 }
 
 #[cfg(test)]

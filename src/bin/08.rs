@@ -1,6 +1,6 @@
 #![feature(binary_heap_into_iter_sorted)]
-use std::{fmt, hash::Hash};
 use std::collections::HashSet;
+use std::{fmt, hash::Hash};
 advent_of_code::solution!(8);
 
 struct PointPair {
@@ -64,14 +64,17 @@ impl Hash for Point {
 pub fn part_one(input: &str) -> Option<u64> {
     // O(n^2)
     let mut heap = std::collections::BinaryHeap::new();
-    let points: Vec<Point> = input.lines().filter_map(|line| {
-        let mut parts = line.split(',');
-        Some(Point {
-            x: parts.next()?.parse::<u64>().ok()?,
-            y: parts.next()?.parse::<u64>().ok()?,
-            z: parts.next()?.parse::<u64>().ok()?,
+    let points: Vec<Point> = input
+        .lines()
+        .filter_map(|line| {
+            let mut parts = line.split(',');
+            Some(Point {
+                x: parts.next()?.parse::<u64>().ok()?,
+                y: parts.next()?.parse::<u64>().ok()?,
+                z: parts.next()?.parse::<u64>().ok()?,
+            })
         })
-    }).collect();
+        .collect();
     for current_point in &points {
         for new_point in &points {
             if *new_point != *current_point {
@@ -91,7 +94,8 @@ pub fn part_one(input: &str) -> Option<u64> {
         hs.insert(*p);
         hs
     }));
-    for _i in 0..20{ // change to 2000 for real input
+    for _i in 0..20 {
+        // change to 2000 for real input
         if let Some(pp) = heap.pop() {
             let mut cluster_a_index: Option<usize> = None;
             let mut cluster_b_index: Option<usize> = None;
@@ -132,7 +136,7 @@ pub fn part_one(input: &str) -> Option<u64> {
             }
         }
     }
-/*     println!(
+    /*     println!(
         "Circuits: {}",
         circuits
             .iter()
@@ -153,14 +157,17 @@ pub fn part_one(input: &str) -> Option<u64> {
 pub fn part_two(input: &str) -> Option<u64> {
     // O(n^2)
     let mut heap = std::collections::BinaryHeap::new();
-    let points: Vec<Point> = input.lines().filter_map(|line| {
-        let mut parts = line.split(',');
-        Some(Point {
-            x: parts.next()?.parse::<u64>().ok()?,
-            y: parts.next()?.parse::<u64>().ok()?,
-            z: parts.next()?.parse::<u64>().ok()?,
+    let points: Vec<Point> = input
+        .lines()
+        .filter_map(|line| {
+            let mut parts = line.split(',');
+            Some(Point {
+                x: parts.next()?.parse::<u64>().ok()?,
+                y: parts.next()?.parse::<u64>().ok()?,
+                z: parts.next()?.parse::<u64>().ok()?,
+            })
         })
-    }).collect();
+        .collect();
     for current_point in &points {
         for new_point in &points {
             if *new_point != *current_point {
@@ -221,7 +228,7 @@ pub fn part_two(input: &str) -> Option<u64> {
             }
         }
     }
-/*     println!(
+    /*     println!(
         "Circuits: {}",
         circuits
             .iter()
@@ -231,7 +238,7 @@ pub fn part_two(input: &str) -> Option<u64> {
     ); */
     // Get the three largest circuits.
     let last = heap.pop()?;
-    return Some(last.point_a.x*last.point_b.x);
+    return Some(last.point_a.x * last.point_b.x);
 }
 
 #[cfg(test)]
